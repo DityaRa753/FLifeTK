@@ -16,7 +16,7 @@ enum { wh_cell = 10, dead_color = FL_BLACK, living_color = FL_WHITE };
 Field::Field(Fl_Window *a_win, int x, int y, int w, int h)
   : Fl_Widget(x, y, w, h)
 {
-  int i, j, x1 = 0, y1 = 0;
+  unsigned int i, j, x1 = 0, y1 = 0;
   win = a_win;
   wsize = w;
   hsize = h;
@@ -61,7 +61,7 @@ Field::Cell* Field::List::Pop()
 
 Field::~Field()
 {
-  for(int i = 0; i < rowsize; i++)
+  for(unsigned int i = 0; i < rowsize; i++)
     delete [] cells[i];
   delete [] cells;
 }
@@ -69,11 +69,20 @@ Field::~Field()
 
 int Field::Run()
 {
-  timespec waitsec = {
-    0, TIME_DELAY
-  };
+  timespec waitsec;
+	waitsec.tv_sec = 0;
+	waitsec.tv_nsec = TIME_DELAY;
   timespec unslept;
+#if defined(__APPLE__)
+#include <TargetConditionals.h>
+	#if TARGET_OS_MAC
   while(run || Fl::program_should_quit()) {
+	#else
+  	# error "Unknown Apple platform"
+	#endif
+#else
+	while(run) {
+#endif
     if(pause) {
       Fl::wait(FOREVER);
       continue;
@@ -91,9 +100,9 @@ int Field::Run()
   return 0;
 }
 
-void Field::Corner(int i, int j, int &alive) // Matrix 2x2
+void Field::Corner(unsigned int i, unsigned int j, int &alive) // Matrix 2x2
 {
-  int k, c, q, v, idx1, idx2;
+  unsigned int k, c, q, v, idx1, idx2;
   alive = 0;
   for(k = i, q = 0; q < 2; q++) {
     idx1 = k + q;
@@ -113,7 +122,7 @@ void Field::Corner(int i, int j, int &alive) // Matrix 2x2
 
 void Field::SideVertical(int i, int j, int &alive) // Matrix 3x2
 {
-  int k, c, q, v, idx1, idx2;
+  unsigned int k, c, q, v, idx1, idx2;
   alive = 0;
   for(k = i-1, q = 0; q < 3; q++) { // we are sure is it possible i-1
     idx1 = k + q;
@@ -129,9 +138,9 @@ void Field::SideVertical(int i, int j, int &alive) // Matrix 3x2
   }
 }
 
-void Field::SideHorizontal(int i, int j, int &alive)// Matrix2x3
+void Field::SideHorizontal(unsigned int i, unsigned int j, int &alive)// Matrix2x3
 {
-  int k, c, v, q, idx1, idx2;
+  unsigned int k, c, v, q, idx1, idx2;
   alive = 0;
   for(k = i, q = 0; q < 2; q++) {
     idx1 = k + q;
@@ -161,9 +170,9 @@ void Field::Internal(int i, int j, int &alive) // Matrix 3x3
   }
 }
 
-Field::position Field::DefinePosition(int i, int j)
+Field::position Field::DefinePosition(unsigned int i, unsigned int j)
 {
-  int calc =
+  unsigned int calc =
     (i == 0 && j == 0) ||
     (i == maxi && j == maxj) ||
     (i == 0 && j == maxj) ||
@@ -180,10 +189,11 @@ Field::position Field::DefinePosition(int i, int j)
 void Field::CalculatedCells()
 {
   int alive;
+	unsigned int i, j;
   position pos;
   Field::Cell *cell;
-  for(int i = 0; i < rowsize; i++) {
-    for(int j = 0; j < colsize; j++) {
+  for(i = 0; i < rowsize; i++) {
+    for(j = 0; j < colsize; j++) {
       pos = DefinePosition(i, j);
       switch(pos) {
         case corner:
@@ -237,15 +247,17 @@ void Field::DrawGrid()
 
 void Field::DisableGrid(int newsize)
 {
-  for(int i = 0; i <= maxi; i++)
-    for(int j = 0; j <= maxj; j++)
+	unsigned int i, j;
+  for(i = 0; i <= maxi; i++)
+    for(j = 0; j <= maxj; j++)
       cells[i][j].Resize(newsize);
 }
 
 void Field::ShowGrid(int newsize)
 {
-  for(int i = 0; i <= maxi; i++) {
-    for(int j = 0; j <= maxj; j++) {
+	unsigned int i, j;
+  for(i = 0; i <= maxi; i++) {
+    for(j = 0; j <= maxj; j++) {
       if(cells[i][j].State()) {
         cells[i][j].SetColor(dead_color);
         cells[i][j].Resize(newsize);
@@ -321,8 +333,9 @@ int Field::handle(int e)
 
 void Field::KillAllTheCells()
 {
-  for(int i = 0; i <= maxi; i++)
-    for(int j = 0; j <= maxj; j++)
+	unsigned int i, j;
+  for(i = 0; i <= maxi; i++)
+    for(j = 0; j <= maxj; j++)
       if(cells[i][j].State())
         cells[i][j].Die();
 }

@@ -58,10 +58,10 @@ private:
   void DisableGrid(int);
   void ShowGrid(int);
   void CalculatedCells();
-  position DefinePosition(int, int);
-  void Corner(int, int, int&);
+  position DefinePosition(unsigned int, unsigned int);
+  void Corner(unsigned int, unsigned int, int&);
   void SideVertical(int, int, int&);
-  void SideHorizontal(int, int, int&);
+  void SideHorizontal(unsigned int, unsigned int, int&);
   void Internal(int, int, int&);
   void KillAllTheCells();
   static void timeout_cb(void*);

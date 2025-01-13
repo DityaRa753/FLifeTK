@@ -18,7 +18,7 @@ CXXFLAGS = -std=c++98 -g -Wall -fno-exceptions
 PROJECT = gameoflife
 
 # Libraries
-PLIBS := 
+PLIBS := -lfltk
 LIBS :=
 INCS := -I$(HDIR)
 

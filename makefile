@@ -18,7 +18,7 @@ CXXFLAGS = -std=c++98 -g -Wall -fno-exceptions
 PROJECT = gameoflife
 
 # Libraries
-PLIBS := -lfltk
+PLIBS :=
 LIBS :=
 INCS := -I$(HDIR)
 
@@ -29,7 +29,7 @@ OBJS = $(patsubst $(SDIR)/%.cpp,$(ODIR)/%.o,$(SRCS))
 # Targets
 $(PROJECT): buildrepo $(OBJS)
 	$(CXX) $(CXXFLAGS) $(FLTKFLAGS) $(OBJS) $(PLIBS) $(LIBS) \
-		$(INCS) -o $@ $(LDSTATIC) $(LDFLAGS)
+		$(INCS) -o $@ $(LDFLAGS)
 
 $(ODIR)/%.o: $(SDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(FLTKFLAGS) $(INCS) -c $< -o $@

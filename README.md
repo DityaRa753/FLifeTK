@@ -4,11 +4,16 @@ Conway's Game of Life is another implementation.
 1. libc - most likely you already have it.
 2. Fast Light Toolkit min. 1.3.9(FLTK) - Download https://www.fltk.org/index.php or 
 usage package manager
+3. fltk-config(script for compile), in common, include with fltk.
+4. make
 # How to compile?
 Just go to in project directory and do:
 ```
 make
 ```
+# How to start?
+Run ./gameoflife and create(click) cells on the field, press 'Space'.
+
 # Control(Just press a key):
 By default, for make a cell need to press 'Mouse 1' or 'Mouse 2' at the field, but some keys override this behavior, switching them to hover mode. To cancel this mode, simply press this key again.
 

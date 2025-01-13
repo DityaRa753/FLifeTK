@@ -29,7 +29,7 @@ OBJS = $(patsubst $(SDIR)/%.cpp,$(ODIR)/%.o,$(SRCS))
 # Targets
 $(PROJECT): buildrepo $(OBJS)
 	$(CXX) $(CXXFLAGS) $(FLTKFLAGS) $(OBJS) $(PLIBS) $(LIBS) \
-		$(INCS) -o $@ $(LDSTATIC)
+		$(INCS) -o $@ $(LDSTATIC) $(LDFLAGS)
 
 $(ODIR)/%.o: $(SDIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $(FLTKFLAGS) $(INCS) -c $< -o $@

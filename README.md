@@ -1,7 +1,7 @@
 # FLifeTK
 Conway's Game of Life is another implementation.
 # Requirements(GUI Library)
-1. libc - most likely you already have it.\
+1. libc - most likely you already have it.
 2. Fast Light Toolkit(FLTK) - Download https://www.fltk.org/index.php or 
 usage package manager.
 # How to compile?

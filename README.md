@@ -2,10 +2,10 @@
 Conway's Game of Life is another implementation.
 # Requirements(GUI Library)
 1. libc - most likely you already have it.
-2. Fast Light Toolkit(FLTK) - Download https://www.fltk.org/index.php or 
-usage package manager.
+2. Fast Light Toolkit min. 1.3.9(FLTK) - Download https://www.fltk.org/index.php or 
+usage package manager
 # How to compile?
-Just do in project root directory:
+Just go to in project directory and do:
 ```
 make
 ```

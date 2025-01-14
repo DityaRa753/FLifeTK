@@ -52,23 +52,22 @@ class Field : public Fl_Widget {
   enum position { corner, sidev, sideh, internal };
 private:
   int handle(int);
-  void draw();
+  void draw() { } // virtual fltk method
   void DrawGrid();
- // void InvertGrid(int);
   void DisableGrid(int);
   void ShowGrid(int);
-  void CalculatedCells();
+  void AdjustCells();
   position DefinePosition(unsigned int, unsigned int);
   void Corner(unsigned int, unsigned int, int&);
   void SideVertical(int, int, int&);
   void SideHorizontal(unsigned int, unsigned int, int&);
   void Internal(int, int, int&);
-  void KillAllTheCells();
+  void KillAllCells();
   static void timeout_cb(void*);
 public:
   int PaintMouse() const { return paint_flag; }
   int EraseCells() const { return erase_flag; }
-  Field(Fl_Window*, int, int, int, int);
+  Field(Fl_Window*, int, int, int, int, int, char**);
   ~Field();
   int Run();
 };

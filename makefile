@@ -6,16 +6,14 @@ SDIR = src
 PATHLIB =
 
 CXX  = $(shell fltk-config --cxx)
-FLTKFLAGS = $(shell fltk-config --cxxflags )
+FLTKFLAGS = $(shell fltk-config --cxxflags -g)
 LDFLAGS  = $(shell fltk-config  --ldflags )
-LDSTATIC = $(shell fltk-config  --ldstaticflags )
-
 
 # Compiler
 CXXFLAGS = -std=c++98 -g -Wall -fno-exceptions
 
 # Project name
-PROJECT = gameoflife
+PROJECT = flifetk
 
 # Libraries
 PLIBS :=

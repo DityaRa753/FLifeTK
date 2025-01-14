@@ -1,12 +1,11 @@
 #include "field.hpp"
+#include <stdio.h>
 
-enum { window_size = 1000 };
+enum { x = 150, y = 150, window_size = 1000 };
 
 int main(int argc, char **argv)
 {
   Fl_Window *window = new Fl_Window(window_size, window_size);
-  Field field(window, 300, 300, window_size, window_size);
-  window->end();
-  window->show(argc, argv);
-  return field.Run();
+  Field field(window, x, y, window_size, window_size, argc, argv);
+	return field.Run();
 }

@@ -13,7 +13,8 @@
 
 enum { wh_cell = 10, dead_color = FL_BLACK, living_color = FL_WHITE };
 
-Field::Field(Fl_Window *a_win, int x, int y, int w, int h)
+Field::Field(Fl_Window *a_win, int x, int y, int w, int h, int argc,
+		char **argv)
   : Fl_Widget(x, y, w, h)
 {
   unsigned int i, j, x1 = 0, y1 = 0;
@@ -27,7 +28,7 @@ Field::Field(Fl_Window *a_win, int x, int y, int w, int h)
   pause = 1;
   paint_flag = 0;
   run = 1;
-  grid_enable = 1;
+  grid_enable = 0;
   erase_flag = 0;
   win->color(FL_WHITE);
   cells = new Field::Cell*[rowsize];
@@ -36,8 +37,18 @@ Field::Field(Fl_Window *a_win, int x, int y, int w, int h)
   for(i = 0; i < rowsize; i++, x1 += wh_cell)
     for(j = 0, y1 = 0; j < colsize; j++, y1 += wh_cell)
       cells[i][j].REinit(this, x1, y1, wh_cell - grid_enable);
+	win->end();
+	win->show(argc, argv);
 }
 
+Field::~Field()
+{
+  for(unsigned int i = 0; i < rowsize; i++)
+    delete [] cells[i];
+  delete [] cells;
+	this->hide();
+	win->hide();
+}
 
 void Field::List::DeleteList(Node *n)
 {
@@ -59,36 +70,28 @@ Field::Cell* Field::List::Pop()
   return val;
 }
 
-Field::~Field()
-{
-  for(unsigned int i = 0; i < rowsize; i++)
-    delete [] cells[i];
-  delete [] cells;
-}
-
-
 int Field::Run()
 {
   timespec waitsec;
 	waitsec.tv_sec = 0;
 	waitsec.tv_nsec = TIME_DELAY;
   timespec unslept;
+	while(run) {
 #if defined(__APPLE__)
 #include <TargetConditionals.h>
-	#if TARGET_OS_MAC
-  while(run || Fl::program_should_quit()) {
+#if TARGET_OS_MAC
+		if(Fl::program_should_quit())
+			run = 0;
 	#else
-  	# error "Unknown Apple platform"
-	#endif
-#else
-	while(run) {
+  	# error "Unsupported Apple platform"
+#endif
 #endif
     if(pause) {
       Fl::wait(FOREVER);
       continue;
     }
     Fl::lock();
-    CalculatedCells();
+    AdjustCells();
     nanosleep(&waitsec, &unslept);
     Fl::unlock();
     Fl::awake();
@@ -186,7 +189,7 @@ Field::position Field::DefinePosition(unsigned int i, unsigned int j)
   return internal;
 }
 
-void Field::CalculatedCells()
+void Field::AdjustCells()
 {
   int alive;
 	unsigned int i, j;
@@ -226,24 +229,6 @@ void Field::CalculatedCells()
   for(cell = new_cells.Pop(); cell; cell = new_cells.Pop())
     cell->Raise();
 }
-
-void Field::draw()
-{
-}
-/*
-void Field::DrawGrid()
-{
-  int x1 = 0, x2 = w(), y1 = wh_cell, y2 = wh_cell;
-  for(int i = 0; i < maxi; i++) { // horizontal
-    fl_line(x1, y1, x2, y1);
-    y2 += wh_cell; y1 += wh_cell;
-  }
-  x1 = wh_cell; x2 = wh_cell; y1 = 0; y2 = h();
-  for(int j = 0; j < maxj; j++) { // vertical
-    fl_line(x1, y1, x2, y2);
-    x1 += wh_cell; x2 += wh_cell;
-  }
-}*/
 
 void Field::DisableGrid(int newsize)
 {
@@ -295,10 +280,10 @@ int Field::handle(int e)
         run = 0;
         this->hide();
         win->hide();
-        return 1;
+        return 0;
       case 'c':
         if(pause) {
-          KillAllTheCells();
+          KillAllCells();
           return 1;
         }
         return 0;
@@ -328,10 +313,13 @@ int Field::handle(int e)
       break;
     }
   }
+	else if(e == FL_HIDE) { // when click on the default close button, mean the default (X close) button which include with any window in GUI application.
+		exit(0);
+	}
   return 0;
 }
 
-void Field::KillAllTheCells()
+void Field::KillAllCells()
 {
 	unsigned int i, j;
   for(i = 0; i <= maxi; i++)

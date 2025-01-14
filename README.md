@@ -2,8 +2,9 @@
 ![Cells example](https://github.com/user-attachments/assets/938f04d7-a1aa-4a97-a3e5-57f9a2fc79b7)
 
 ## Introduction
-Conway's Game of Life is another implementation. See more at https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 `FLifeTk` is a cross-platform cellular automaton.
+Conway's Game of Life is another implementation. It's a zero-player game, meaning that its evolution is determined by its initial state, requiring no further input.
+See more at https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life
 # Build instruction
 ## Prerequisite
 1. C++98 compliant compiler, **llvm** or **gcc**;
